@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementation of a simple use case (service), which could be tested how it behaves on interruptions or race conditions
+ * Implementation of a simple use case (service), which could be tested how it behaves on interruptions or race conditions.
  */
 class MyService {
 
@@ -25,7 +25,6 @@ class MyService {
     MyService(final InterruptService interruptService) {
         this.interruptService = interruptService;
         this.results = new ArrayList<>();
-        ;
     }
 
     void doSomething() {

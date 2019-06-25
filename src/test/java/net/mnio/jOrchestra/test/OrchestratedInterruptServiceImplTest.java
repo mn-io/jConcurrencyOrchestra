@@ -60,7 +60,7 @@ public class OrchestratedInterruptServiceImplTest {
     }
 
     /**
-     * simple executes job given by external service in our task environment
+     * Executes job given by external service in our task environment.
      */
     static class MyServiceExecutorTask extends Task {
 
@@ -77,7 +77,7 @@ public class OrchestratedInterruptServiceImplTest {
     }
 
     /**
-     * does nothing beside throwing an exception to test what happens in case...
+     * Does nothing beside throwing an exception to test what happens in case.
      */
     static class MyThrowExceptionTask extends Task {
 

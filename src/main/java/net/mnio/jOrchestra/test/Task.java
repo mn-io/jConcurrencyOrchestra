@@ -8,7 +8,7 @@ import static java.lang.String.format;
 
 
 /**
- * Wrapper to be extended for running arbitrary code within {@link OrchestratedInterruptServiceImpl}
+ * Wrapper to be extended for running arbitrary code within {@link OrchestratedInterruptServiceImpl}.
  */
 public abstract class Task extends Thread {
 
@@ -76,7 +76,7 @@ public abstract class Task extends Thread {
     }
 
     /**
-     * Invoke your code to be be executed here
+     * Invoke your code to be be executed here.
      *
      * @throws Throwable
      */

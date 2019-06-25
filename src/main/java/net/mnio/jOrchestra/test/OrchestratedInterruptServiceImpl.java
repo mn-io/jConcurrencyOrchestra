@@ -8,18 +8,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.String.format;
 
-
 public class OrchestratedInterruptServiceImpl implements InterruptService {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
     private ThreadLocal<AtomicInteger> interruptCounter = new ThreadLocal<>();
 
-    TaskSchedule schedule;
+    private TaskSchedule schedule;
 
     /**
-     * execs all tasks in given order.
-     * If last task executed and still interruptions called, it will ignore them and continue with finishing them in same order given.
+     * executes all tasks in given order.
+     * If last task is executed and interruptions are still called, it will ignore and continue with finishing them in same running order given.
      * e.g. task1, then task2, and so on.
      *
      * @param runningOrder
@@ -49,20 +48,20 @@ public class OrchestratedInterruptServiceImpl implements InterruptService {
         ticker.interrupt();
 
         // collect results
+        boolean result = true;
         for (final Task task : schedule.getAll()) {
             if (!task.isSuccess()) {
-                schedule = null;
-                return false;
+                result = false;
+                break;
             }
         }
 
         schedule = null;
-        return true;
+        return result;
     }
 
     /**
-     * If called it checks whether the current thread is a task and start waiting.
-     *
+     * If called, it checks whether the current thread is a task and start waiting.
      * @param description
      */
     @Override
@@ -94,11 +93,6 @@ public class OrchestratedInterruptServiceImpl implements InterruptService {
 
         } catch (final InterruptedException ignore) {
         }
-    }
-
-    @Override
-    public void interrupt() {
-        interrupt(null);
     }
 
     private int getCount() {
