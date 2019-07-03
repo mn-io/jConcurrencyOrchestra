@@ -21,8 +21,8 @@ public class OrchestratedInterruptServiceImplTest {
         final MyService service = new MyService(interruptService);
 
         // Second we need several threads (= tasks here) to be working with the same service.
-        final TaskImpl task1 = new MyServiceExecutorTask("/1", service);
-        final TaskImpl task2 = new MyServiceExecutorTask("/2", service);
+        final TaskWrapper task1 = new MyServiceExecutorTask("/1", service);
+        final TaskWrapper task2 = new MyServiceExecutorTask("/2", service);
 
         // start the tasks in given order. 
         // When task2 interrupts again it will finish task1 first as it is first in running order.
@@ -67,8 +67,8 @@ public class OrchestratedInterruptServiceImplTest {
         final OrchestratedInterruptServiceImpl interruptService = new OrchestratedInterruptServiceImpl();
 
         final MyService service = new MyService(interruptService);
-        final TaskImpl task1 = new MyServiceExecutorTask(null, service);
-        final TaskImpl task2 = new MyThrowExceptionTask();
+        final TaskWrapper task1 = new MyServiceExecutorTask(null, service);
+        final TaskWrapper task2 = new MyThrowExceptionTask();
 
         final boolean success = interruptService.start(task1, task2, task1);
         assertFalse(success);
@@ -94,7 +94,7 @@ public class OrchestratedInterruptServiceImplTest {
     /**
      * Executes job given by external service in our task environment.
      */
-    static class MyServiceExecutorTask extends TaskImpl {
+    static class MyServiceExecutorTask extends TaskWrapper {
 
         private final MyService service;
 
@@ -112,7 +112,7 @@ public class OrchestratedInterruptServiceImplTest {
     /**
      * Does nothing beside throwing an exception to test what happens in case.
      */
-    static class MyThrowExceptionTask extends TaskImpl {
+    static class MyThrowExceptionTask extends TaskWrapper {
 
         static final String MSG = "This exception is expected";
 

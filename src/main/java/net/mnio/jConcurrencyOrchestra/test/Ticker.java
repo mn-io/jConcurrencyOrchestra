@@ -1,6 +1,5 @@
 package net.mnio.jConcurrencyOrchestra.test;
 
-
 class Ticker extends Thread {
 
     private static final int TICK_TIMEOUT = 200;
@@ -28,7 +27,7 @@ class Ticker extends Thread {
     }
 
     private boolean hasWaitingThreads() {
-        for (final TaskImpl task : schedule.getAll()) {
+        for (final TaskWrapper task : schedule.getAll()) {
             final State state = task.getState();
             if (state == State.TERMINATED) {
                 continue;
@@ -44,7 +43,7 @@ class Ticker extends Thread {
     private void notifyNext() {
         currentTaskNumber++;
 
-        final TaskImpl nextTask;
+        final TaskWrapper nextTask;
         if (currentTaskNumber >= schedule.getOrderLength()) {
             nextTask = findFirstWaitingThread();
         } else {
@@ -56,8 +55,8 @@ class Ticker extends Thread {
         }
     }
 
-    private TaskImpl findFirstWaitingThread() {
-        for (final TaskImpl task : schedule.getAll()) {
+    private TaskWrapper findFirstWaitingThread() {
+        for (final TaskWrapper task : schedule.getAll()) {
             if (task.isWaiting()) {
                 return task;
             }

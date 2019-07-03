@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementation of a simple use case (service), which could be tested how it behaves on interruptions or race conditions.
+ * Implementation of a simple use case (service), which could be tested on how it behaves on interruptions or race conditions.
  */
 class MyService {
 
@@ -34,18 +34,26 @@ class MyService {
             e.printStackTrace();
         }
 
+        // e.g. "Thread-0-Task-/1 => 1" for Task with name /1
+        // NB: Keep in mind that Thread.currentThread().getName() is returning the task name - task extends threads and we call `setName()`
         final String one = Thread.currentThread().getName() + " => 1";
         log.info(one);
         results.add(one);
 
-        interruptService.interrupt();
+        // before stopping here it will print "1. time for thread - Interruption '1->2' called"
+        interruptService.interrupt("1->2");
+        // before continue here it will print "1. time for thread - Continue from interruption '1->2'"
 
+        // e.g. "Thread-0-Task-/1 => 2" for Task with name /1
         final String two = Thread.currentThread().getName() + " => 2";
         log.info(two);
         results.add(two);
 
-        interruptService.interrupt();
+        // before stopping here it will print "2. time for thread - Interruption '2->3' called"
+        interruptService.interrupt("2->3");
+        // before continue here it will print "2. time for thread - Continue from interruption '2->3'"
 
+        // e.g. "Thread-0-Task-/1 => 3" for Task with name /1
         final String three = Thread.currentThread().getName() + " => 3";
         log.info(three);
         results.add(three);

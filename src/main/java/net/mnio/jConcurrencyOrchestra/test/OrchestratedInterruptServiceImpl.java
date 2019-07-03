@@ -18,7 +18,7 @@ public class OrchestratedInterruptServiceImpl implements InterruptService {
     private TaskSchedule schedule;
 
     /**
-     * executes all tasks in given order.
+     * Executes all tasks in given order.
      * If last task is executed and interruptions are still called, it will ignore and continue with finishing them in same running order given.
      * e.g. task1, then task2, and so on.
      *
@@ -26,14 +26,14 @@ public class OrchestratedInterruptServiceImpl implements InterruptService {
      * @return true if all tasks ran successfully
      * @throws InterruptedException
      */
-    public boolean start(final TaskImpl... runningOrder) throws InterruptedException {
+    public boolean start(final TaskWrapper... runningOrder) throws InterruptedException {
         schedule = new TaskSchedule(runningOrder);
         schedule.logRunningOrder();
 
         final Ticker ticker = new Ticker(schedule);
 
         // tasks invoke doWait() at beginning of run() to be on hold...
-        for (final TaskImpl task : schedule.getAll()) {
+        for (final TaskWrapper task : schedule.getAll()) {
             task.start();
         }
 
@@ -41,7 +41,7 @@ public class OrchestratedInterruptServiceImpl implements InterruptService {
         ticker.start();
 
         // we can wait infinite until all tasks are done ...
-        for (final TaskImpl task : schedule.getAll()) {
+        for (final TaskWrapper task : schedule.getAll()) {
             task.join();
         }
 
@@ -50,7 +50,7 @@ public class OrchestratedInterruptServiceImpl implements InterruptService {
 
         // collect results
         boolean result = true;
-        for (final TaskImpl task : schedule.getAll()) {
+        for (final TaskWrapper task : schedule.getAll()) {
             if (!task.isSuccess()) {
                 result = false;
                 break;
@@ -61,32 +61,41 @@ public class OrchestratedInterruptServiceImpl implements InterruptService {
         return result;
     }
 
+    /**
+     * Executes all tasks in given order.
+     * If last task is executed and interruptions are still called, it will ignore and continue with finishing them in same running order given.
+     * e.g. task1, then task2, and so on.
+     *
+     * @param runningOrder
+     * @return true if all tasks ran successfully
+     * @throws InterruptedException
+     */
     public boolean start(final Task... runningOrder) throws InterruptedException {
-        final HashMap<Task, TaskImpl> taskMapper = new HashMap<>();
-        final TaskImpl[] wrapped = new TaskImpl[runningOrder.length];
+        final HashMap<Task, TaskWrapper> taskMapper = new HashMap<>();
+        final TaskWrapper[] wrapped = new TaskWrapper[runningOrder.length];
+
         for (int i = 0; i < runningOrder.length; i++) {
             final Task task = runningOrder[i];
-
             if (taskMapper.containsKey(task)) {
                 wrapped[i] = taskMapper.get(task);
-            } else {
-                final TaskImpl taskImpl = new TaskImpl() {
-                    @Override
-                    public void toBeCalled() throws Throwable {
-                        task.toBeCalled();
-                    }
-                };
-                taskMapper.put(task, taskImpl);
-                wrapped[i] = taskImpl;
+                continue;
             }
+
+            final TaskWrapper taskWrapper = new TaskWrapper() {
+                @Override
+                public void toBeCalled() throws Throwable {
+                    task.toBeCalled();
+                }
+            };
+            taskMapper.put(task, taskWrapper);
+            wrapped[i] = taskWrapper;
         }
+
         return start(wrapped);
     }
 
     /**
-     * If called, it checks whether the current thread is a task and start waiting.
-     *
-     * @param description
+     * {@inheritDoc}
      */
     @Override
     public void interrupt(final String description) {
@@ -103,7 +112,7 @@ public class OrchestratedInterruptServiceImpl implements InterruptService {
 
         try {
             final Thread currentThread = Thread.currentThread();
-            for (final TaskImpl task : schedule.getAll()) {
+            for (final TaskWrapper task : schedule.getAll()) {
                 if (task.equals(currentThread)) {
                     synchronized (task) {
                         final int currentCount = getCount();

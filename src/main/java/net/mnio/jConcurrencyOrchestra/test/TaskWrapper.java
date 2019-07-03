@@ -8,9 +8,9 @@ import static java.lang.String.format;
 
 
 /**
- * Wrapper to be extended for running arbitrary code within {@link OrchestratedInterruptServiceImpl}.
+ * Wrapper to be extended for running arbitrary code within {@link OrchestratedInterruptServiceImpl} in its own thread.
  */
-public abstract class TaskImpl extends Thread implements Task {
+public abstract class TaskWrapper extends Thread implements Task {
 
     private List<String> exceptionMessages = new ArrayList<>();
 
@@ -20,11 +20,20 @@ public abstract class TaskImpl extends Thread implements Task {
 
     private boolean isWaiting;
 
-    public TaskImpl(final String name) {
+    /**
+     * Creates thread with given name as suffix
+     *
+     * @param name
+     */
+    public TaskWrapper(final String name) {
         setName(getName() + "-Task-" + name);
     }
 
-    public TaskImpl() {
+
+    /**
+     * Creates thread with random name as suffix
+     */
+    public TaskWrapper() {
         this(UUID.randomUUID().toString().split("-")[0]);
     }
 
@@ -48,24 +57,43 @@ public abstract class TaskImpl extends Thread implements Task {
         }
     }
 
-    public boolean hasExceptionMessage(final String s) {
+    /**
+     * True if message is found in any exception message thrown.
+     * It will search recursively within stack trace.
+     *
+     * @param messageContains
+     * @return
+     */
+    public boolean hasExceptionMessage(final String messageContains) {
         for (final String exceptionMessage : exceptionMessages) {
-            if (exceptionMessage.contains(s)) {
+            if (exceptionMessage.contains(messageContains)) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean hasExceptionType(final Class<? extends Throwable> t) {
+    /**
+     * True if exception type is matching any exception thrown.
+     * It will search recursively within stack trace.
+     *
+     * @param typeLookingFor
+     * @return
+     */
+    public boolean hasExceptionType(final Class<? extends Throwable> typeLookingFor) {
         for (final Class<? extends Throwable> exceptionType : exceptionTypes) {
-            if (exceptionType.equals(t)) {
+            if (exceptionType.equals(typeLookingFor)) {
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * True if no exception occurred.
+     *
+     * @return
+     */
     public boolean isSuccess() {
         return success;
     }
@@ -76,7 +104,7 @@ public abstract class TaskImpl extends Thread implements Task {
     }
 
     /**
-     * Invoke your code to be be executed here.
+     * {@inheritDoc}
      *
      * @throws Throwable
      */
