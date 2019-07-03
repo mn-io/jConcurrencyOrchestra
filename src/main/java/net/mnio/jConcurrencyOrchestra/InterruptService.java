@@ -1,4 +1,4 @@
-package net.mnio.jConcurrenyOrchestra;
+package net.mnio.jConcurrencyOrchestra;
 
 public interface InterruptService {
 

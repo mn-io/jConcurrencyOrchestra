@@ -1,6 +1,6 @@
-package net.mnio.jConcurrenyOrchestra.test;
+package net.mnio.jConcurrencyOrchestra.test;
 
-import net.mnio.jConcurrenyOrchestra.InterruptService;
+import net.mnio.jConcurrencyOrchestra.InterruptService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

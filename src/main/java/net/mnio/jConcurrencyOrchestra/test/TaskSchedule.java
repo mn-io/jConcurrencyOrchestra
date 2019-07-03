@@ -1,4 +1,4 @@
-package net.mnio.jConcurrenyOrchestra.test;
+package net.mnio.jConcurrencyOrchestra.test;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

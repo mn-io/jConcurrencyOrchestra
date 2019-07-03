@@ -1,12 +1,12 @@
-package net.mnio.jConcurrenyOrchestra.test;
+package net.mnio.jConcurrencyOrchestra.test;
 
-import net.mnio.jConcurrenyOrchestra.InterruptService;
+import net.mnio.jConcurrencyOrchestra.InterruptService;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static net.mnio.jConcurrenyOrchestra.test.OrchestratedInterruptServiceImplTest.MyThrowExceptionTask.MSG;
+import static net.mnio.jConcurrencyOrchestra.test.OrchestratedInterruptServiceImplTest.MyThrowExceptionTask.MSG;
 import static org.junit.Assert.*;
 
 

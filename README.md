@@ -6,9 +6,12 @@ Allows concurrency testing to see how your program behaves on (triggered) race c
 
 ## Get started
 
-Take a look at the unit tests here. 
-A more realistic use case can be seen in some other github repo how to deal with InterruptService in a spring environment.
+Code is the best documentation and therefore go here: 
+[OrchestratedInterruptServiceImplTest](https://github.com/mn-io/jConcurrencyOrchestra/blob/master/src/test/java/net/mnio/jConcurrencyOrchestra/test/OrchestratedInterruptServiceImplTest.java)
 
+A more realistic use case can be seen in my [spring boot setup repository](https://github.com/mn-io/spring-booter/#Testing).
+[UserServiceOrchestrationTest.java](https://github.com/mn-io/spring-booter/blob/master/src/test/java/net/mnio/springbooter/services/user/UserServiceOrchestrationTest.java)
+shows how InterruptService is used within spring environment.
 
 ## how it works
 
