@@ -50,8 +50,6 @@ public class OrchestratedInterruptServiceImplTest {
         assertEquals(3, results.get(3).intValue());
         assertEquals(2, results.get(4).intValue());
         assertEquals(3, results.get(5).intValue());
-
-
     }
 
     @Test
