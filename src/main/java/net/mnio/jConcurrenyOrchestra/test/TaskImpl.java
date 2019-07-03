@@ -1,4 +1,4 @@
-package net.mnio.jOrchestra.test;
+package net.mnio.jConcurrenyOrchestra.test;
 
 import java.util.ArrayList;
 import java.util.List;

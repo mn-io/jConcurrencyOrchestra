@@ -1,4 +1,4 @@
-package net.mnio.jOrchestra.test;
+package net.mnio.jConcurrenyOrchestra.test;
 
 
 class Ticker extends Thread {
