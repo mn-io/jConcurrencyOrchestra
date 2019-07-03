@@ -21,7 +21,7 @@ public abstract class TaskImpl extends Thread implements Task {
     private boolean isWaiting;
 
     public TaskImpl(final String name) {
-        setName(getName() + "-TaskImpl-" + name);
+        setName(getName() + "-Task-" + name);
     }
 
     public TaskImpl() {

@@ -16,7 +16,7 @@ class MyService {
 
     private final InterruptService interruptService;
 
-    private final List<Integer> results;
+    private final List<String> results;
 
     /**
      * @param interruptService InterruptService is needed in order to interrupt according to scheduled tasks.
@@ -34,18 +34,21 @@ class MyService {
             e.printStackTrace();
         }
 
-        log.info(Thread.currentThread().getName() + " => 1");
-        results.add(1);
+        final String one = Thread.currentThread().getName() + " => 1";
+        log.info(one);
+        results.add(one);
 
         interruptService.interrupt();
 
-        log.info(Thread.currentThread().getName() + " => 2");
-        results.add(2);
+        final String two = Thread.currentThread().getName() + " => 2";
+        log.info(two);
+        results.add(two);
 
         interruptService.interrupt();
 
-        log.info(Thread.currentThread().getName() + " => 3");
-        results.add(3);
+        final String three = Thread.currentThread().getName() + " => 3";
+        log.info(three);
+        results.add(three);
 
         try {
             Thread.sleep(100);
@@ -54,7 +57,7 @@ class MyService {
         }
     }
 
-    List<Integer> getResults() {
+    List<String> getResults() {
         return results;
     }
 }
