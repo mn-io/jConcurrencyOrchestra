@@ -4,6 +4,7 @@ import net.mnio.jOrchestra.InterruptService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.String.format;
@@ -25,14 +26,14 @@ public class OrchestratedInterruptServiceImpl implements InterruptService {
      * @return true if all tasks ran successfully
      * @throws InterruptedException
      */
-    public boolean start(final Task... runningOrder) throws InterruptedException {
+    public boolean start(final TaskImpl... runningOrder) throws InterruptedException {
         schedule = new TaskSchedule(runningOrder);
         schedule.logRunningOrder();
 
         final Ticker ticker = new Ticker(schedule);
 
         // tasks invoke doWait() at beginning of run() to be on hold...
-        for (final Task task : schedule.getAll()) {
+        for (final TaskImpl task : schedule.getAll()) {
             task.start();
         }
 
@@ -40,7 +41,7 @@ public class OrchestratedInterruptServiceImpl implements InterruptService {
         ticker.start();
 
         // we can wait infinite until all tasks are done ...
-        for (final Task task : schedule.getAll()) {
+        for (final TaskImpl task : schedule.getAll()) {
             task.join();
         }
 
@@ -49,7 +50,7 @@ public class OrchestratedInterruptServiceImpl implements InterruptService {
 
         // collect results
         boolean result = true;
-        for (final Task task : schedule.getAll()) {
+        for (final TaskImpl task : schedule.getAll()) {
             if (!task.isSuccess()) {
                 result = false;
                 break;
@@ -60,8 +61,31 @@ public class OrchestratedInterruptServiceImpl implements InterruptService {
         return result;
     }
 
+    public boolean start(final Task... runningOrder) throws InterruptedException {
+        final HashMap<Task, TaskImpl> taskMapper = new HashMap<>();
+        final TaskImpl[] wrapped = new TaskImpl[runningOrder.length];
+        for (int i = 0; i < runningOrder.length; i++) {
+            final Task task = runningOrder[i];
+
+            if (taskMapper.containsKey(task)) {
+                wrapped[i] = taskMapper.get(task);
+            } else {
+                final TaskImpl taskImpl = new TaskImpl() {
+                    @Override
+                    public void toBeCalled() throws Throwable {
+                        task.toBeCalled();
+                    }
+                };
+                taskMapper.put(task, taskImpl);
+                wrapped[i] = taskImpl;
+            }
+        }
+        return start(wrapped);
+    }
+
     /**
      * If called, it checks whether the current thread is a task and start waiting.
+     *
      * @param description
      */
     @Override
@@ -79,7 +103,7 @@ public class OrchestratedInterruptServiceImpl implements InterruptService {
 
         try {
             final Thread currentThread = Thread.currentThread();
-            for (final Task task : schedule.getAll()) {
+            for (final TaskImpl task : schedule.getAll()) {
                 if (task.equals(currentThread)) {
                     synchronized (task) {
                         final int currentCount = getCount();

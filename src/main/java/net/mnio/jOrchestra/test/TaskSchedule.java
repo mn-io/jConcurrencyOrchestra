@@ -13,17 +13,17 @@ class TaskSchedule {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
-    private final Task[] runningOrder;
+    private final TaskImpl[] runningOrder;
 
     /**
      * Contains all tasks in given running order but without duplicates.
      * List instead of Set is used here to preserve its order provided by running order.
      */
-    private final List<Task> allWithoutDuplicates;
+    private final List<TaskImpl> allWithoutDuplicates;
 
-    TaskSchedule(final Task... runningOrder) {
+    TaskSchedule(final TaskImpl... runningOrder) {
         if (runningOrder == null) {
-            this.runningOrder = new Task[0];
+            this.runningOrder = new TaskImpl[0];
         } else {
             this.runningOrder = runningOrder;
         }
@@ -31,9 +31,9 @@ class TaskSchedule {
         this.allWithoutDuplicates = listAllWithoutDuplicates(this.runningOrder);
     }
 
-    private List<Task> listAllWithoutDuplicates(final Task[] runningOrder) {
-        final List<Task> tasks = new ArrayList<>();
-        for (final Task task : runningOrder) {
+    private List<TaskImpl> listAllWithoutDuplicates(final TaskImpl[] runningOrder) {
+        final List<TaskImpl> tasks = new ArrayList<>();
+        for (final TaskImpl task : runningOrder) {
             if (!tasks.contains(task)) {
                 tasks.add(task);
             }
@@ -41,7 +41,7 @@ class TaskSchedule {
         return Collections.unmodifiableList(tasks);
     }
 
-    Task getByOrder(final int i) {
+    TaskImpl getByOrder(final int i) {
         return runningOrder[i];
     }
 
@@ -49,7 +49,7 @@ class TaskSchedule {
         return runningOrder.length;
     }
 
-    List<Task> getAll() {
+    List<TaskImpl> getAll() {
         return allWithoutDuplicates;
     }
 

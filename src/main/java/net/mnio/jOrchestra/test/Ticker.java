@@ -28,7 +28,7 @@ class Ticker extends Thread {
     }
 
     private boolean hasWaitingThreads() {
-        for (final Task task : schedule.getAll()) {
+        for (final TaskImpl task : schedule.getAll()) {
             final State state = task.getState();
             if (state == State.TERMINATED) {
                 continue;
@@ -44,7 +44,7 @@ class Ticker extends Thread {
     private void notifyNext() {
         currentTaskNumber++;
 
-        final Task nextTask;
+        final TaskImpl nextTask;
         if (currentTaskNumber >= schedule.getOrderLength()) {
             nextTask = findFirstWaitingThread();
         } else {
@@ -56,8 +56,8 @@ class Ticker extends Thread {
         }
     }
 
-    private Task findFirstWaitingThread() {
-        for (final Task task : schedule.getAll()) {
+    private TaskImpl findFirstWaitingThread() {
+        for (final TaskImpl task : schedule.getAll()) {
             if (task.isWaiting()) {
                 return task;
             }
