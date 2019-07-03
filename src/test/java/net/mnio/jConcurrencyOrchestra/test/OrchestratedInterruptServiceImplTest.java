@@ -34,12 +34,12 @@ public class OrchestratedInterruptServiceImplTest {
         // And in here we verify our collected results. 
         // Each assert in a single line to be able to track irregularities more elegant.
         final List<String> results = service.getResults();
-        assertEquals("Thread-0-Task-/1 => 1", results.get(0)); // Task1 puts 1.
-        assertEquals("Thread-0-Task-/1 => 2", results.get(1)); // Task1 is in running order again and puts 2.
-        assertEquals("Thread-1-Task-/2 => 1", results.get(2)); // Now Task2 takes over and put another 1.
-        assertEquals("Thread-0-Task-/1 => 3", results.get(3)); // We finish by given running order from beginning, which is Task1
-        assertEquals("Thread-1-Task-/2 => 2", results.get(4)); // Task2 can now finish ...
-        assertEquals("Thread-1-Task-/2 => 3", results.get(5)); // ... until the end.
+        assertTrue(results.get(0).endsWith("Task-/1 => 1")); // Task1 puts 1.
+        assertTrue(results.get(1).endsWith("Task-/1 => 2")); // Task1 is in running order again and puts 2.
+        assertTrue(results.get(2).endsWith("Task-/2 => 1")); // Now Task2 takes over and put another 1.
+        assertTrue(results.get(3).endsWith("Task-/1 => 3")); // We finish by given running order from beginning, which is Task1
+        assertTrue(results.get(4).endsWith("Task-/2 => 2")); // Task2 can now finish ...
+        assertTrue(results.get(5).endsWith("Task-/2 => 3")); // ... until the end.
     }
 
     @Test
