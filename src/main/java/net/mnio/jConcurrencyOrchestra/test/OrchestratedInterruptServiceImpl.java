@@ -107,9 +107,9 @@ public class OrchestratedInterruptServiceImpl implements InterruptService {
                 if (task.equals(currentThread)) {
                     synchronized (task) {
                         final int currentCount = getCount();
-                        log.info(format("%d - Interruption%s called", currentCount, actualDescription));
+                        log.info(format("%d. time for thread - Interruption%s called", currentCount, actualDescription));
                         task.doWait();
-                        log.info(format("%d - Continue from interruption%s", currentCount, actualDescription));
+                        log.info(format("%d. time for thread - Continue from interruption%s", currentCount, actualDescription));
                         return;
                     }
                 }
