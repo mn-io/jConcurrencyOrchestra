@@ -12,7 +12,7 @@ Code is the best documentation and therefore start at the given unit tests in
 [OrchestratedInterruptServiceImplTest.java](https://github.com/mn-io/jConcurrencyOrchestra/blob/master/src/test/java/net/mnio/jConcurrencyOrchestra/test/OrchestratedInterruptServiceImplTest.java)
 
 A more realistic use case can be seen in my [spring boot setup repository](https://github.com/mn-io/spring-booter/#Concurrency).
-[UserServiceConcurrencyTest.java](https://github.com/mn-io/spring-booter/blob/master/src/test/java/net/mnio/springbooter/services/user/UserServiceConcurrencyTest.java)
+[UserControllerConcurrencyTest.java](https://github.com/mn-io/spring-booter/blob/master/src/test/java/net/mnio/springbooter/controller/UserControllerConcurrencyTest.java)
 shows how InterruptService is used within spring environment.
 
 
